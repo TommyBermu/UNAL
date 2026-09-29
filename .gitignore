@@ -1,16 +1,29 @@
-.vscode
-.idea
-
-*.tsv
-*.csv
-*.bin
-*.o
-*.pdf
-*.bak
+# Logs
+logs
 *.log
-*.tmp
-*.swp
-*.swo
-*.DS_Store
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
 *.local
 
+# Editor directories and files
+.kiro/
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# de CompuParalela
+CompuParalela2026-2/code/
+enwiki-latest-pages-articles13.xml-p10672789p11659682
