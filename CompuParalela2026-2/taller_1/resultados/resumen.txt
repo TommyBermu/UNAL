@@ -1,0 +1,31 @@
+RESUMEN GENERAL DE PRUEBAS - Taller Practico Hilos
+Fecha: 2026-10-05 16:26:21
+Repeticiones por caso: 10
+
+Programa                         | Consumidores | Promedio(ms)
+---------------------------------+--------------+-------------
+WordCountProducerConsumer        | 1            | 17625.20    
+WordCountSynchronizedHashMap     | 1            | 16553.00    
+WordCountSynchronizedHashMap     | 2            | 20574.90    
+WordCountSynchronizedHashMap     | 3            | 22196.00    
+WordCountSynchronizedHashMap     | 4            | 20449.20    
+WordCountSynchronizedHashMap     | 5            | 22351.50    
+WordCountSynchronizedHashMap     | 6            | 23202.20    
+WordCountSynchronizedHashMap     | 7            | 22501.40    
+
+WordCountConcurrentHashMap       | 1            | 19970.80    
+WordCountConcurrentHashMap       | 2            | 10099.40    
+WordCountConcurrentHashMap       | 3            | 8206.80     
+WordCountConcurrentHashMap       | 4            | 6585.30     
+WordCountConcurrentHashMap       | 5            | 6341.90     
+WordCountConcurrentHashMap       | 6            | 6184.50     
+WordCountConcurrentHashMap       | 7            | 6291.30     
+
+WordCountBatchConcurrentHashMap  | 1            | 19464.70    
+WordCountBatchConcurrentHashMap  | 2            | 10309.10    
+WordCountBatchConcurrentHashMap  | 3            | 7855.90     
+WordCountBatchConcurrentHashMap  | 4            | 6832.80     
+WordCountBatchConcurrentHashMap  | 5            | 6686.20     
+WordCountBatchConcurrentHashMap  | 6            | 6377.00     
+WordCountBatchConcurrentHashMap  | 7            | 6554.80     
+

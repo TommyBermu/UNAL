@@ -1,0 +1,20 @@
+============================================================
+ Programa : WordCountBatchConcurrentHashMap
+ Caso     : 7 consumidor(es)
+ Repeticiones: 10
+ Fecha    : 2026-10-05 17:15:13
+============================================================
+  Corrida  1:   6981 ms
+  Corrida  2:   6180 ms
+  Corrida  3:   6987 ms
+  Corrida  4:   6228 ms
+  Corrida  5:   6508 ms
+  Corrida  6:   6460 ms
+  Corrida  7:   6268 ms
+  Corrida  8:   6358 ms
+  Corrida  9:   7122 ms
+  Corrida 10:   6456 ms
+------------------------------------------------------------
+ Suma total : 65548 ms
+ PROMEDIO   : 6554.80 ms
+------------------------------------------------------------

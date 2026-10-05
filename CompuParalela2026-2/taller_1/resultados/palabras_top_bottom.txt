@@ -1,0 +1,23 @@
+============================================================
+ PUNTO 10 - Palabras con mas y menos repeticiones
+ Programa : WordCountConcurrentHashMap (4 consumidores)
+ Fecha    : 2026-10-05 17:16:21
+============================================================
+Archivo procesado: ../enwiki-latest-pages-articles13.xml-p10672789p11659682
+Consumidores: 4
+Elapsed time: 7282ms
+Total de palabras distintas: 1791625
+
+== 5 palabras con MAS repeticiones ==
+1. the -> 1504398
+2. of -> 1060620
+3. and -> 780863
+4. in -> 696933
+5. ref -> 674843
+
+== 5 palabras con MENOS repeticiones ==
+1. entweb.clemson.edu -> 1
+2. Vamsasthulu -> 1
+3. Echaurri -> 1
+4. AZU_TD_BOX267 -> 1
+5. on_human_hand.jpg -> 1

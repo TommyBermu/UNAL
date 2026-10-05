@@ -1,0 +1,20 @@
+============================================================
+ Programa : WordCountProducerConsumer
+ Caso     : 1 productor / 1 consumidor
+ Repeticiones: 10
+ Fecha    : 2026-10-05 16:26:23
+============================================================
+  Corrida  1:  15997 ms
+  Corrida  2:  20449 ms
+  Corrida  3:  15705 ms
+  Corrida  4:  15269 ms
+  Corrida  5:  15372 ms
+  Corrida  6:  20939 ms
+  Corrida  7:  20784 ms
+  Corrida  8:  20151 ms
+  Corrida  9:  15784 ms
+  Corrida 10:  15802 ms
+------------------------------------------------------------
+ Suma total : 176252 ms
+ PROMEDIO   : 17625.20 ms
+------------------------------------------------------------

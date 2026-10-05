@@ -1,0 +1,20 @@
+============================================================
+ Programa : WordCountSynchronizedHashMap
+ Caso     : 3 consumidor(es)
+ Repeticiones: 10
+ Fecha    : 2026-10-05 16:35:41
+============================================================
+  Corrida  1:  23116 ms
+  Corrida  2:  18897 ms
+  Corrida  3:  23872 ms
+  Corrida  4:  24059 ms
+  Corrida  5:  18974 ms
+  Corrida  6:  23307 ms
+  Corrida  7:  23844 ms
+  Corrida  8:  22585 ms
+  Corrida  9:  19430 ms
+  Corrida 10:  23876 ms
+------------------------------------------------------------
+ Suma total : 221960 ms
+ PROMEDIO   : 22196.00 ms
+------------------------------------------------------------

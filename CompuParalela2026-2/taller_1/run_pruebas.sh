@@ -22,6 +22,11 @@ REPES="${REPES:-10}"                            # repeticiones por caso (minimo 
 CONSUMIDORES="${CONSUMIDORES:-1 2 3 4 5 6 7}"   # casos de consumidores para los puntos 6,7,8
 MAIN="com.paulbutcher.WordCount"
 
+# Flags para desactivar los limites del parser XML de Java moderno (Java 15+).
+# Sin esto, el parser corta la lectura a ~2900 paginas y las pruebas quedan
+# incompletas (terminan en segundos en vez de procesar las 100.000 paginas).
+JVM_FLAGS="-Djdk.xml.maxGeneralEntitySizeLimit=0 -Djdk.xml.totalEntitySizeLimit=0 -Djdk.xml.entityExpansionLimit=0"
+
 mkdir -p "$OUT"
 
 # Programas con numero de consumidores configurable (args[0] = #consumidores)
@@ -32,10 +37,8 @@ PROG_MULTI="WordCountSynchronizedHashMap WordCountConcurrentHashMap WordCountBat
 # Compila un proyecto (si no esta compilado) y devuelve su classpath
 compilar() {
   local proj="$1"
-  if [ ! -d "$RAIZ/$proj/target/classes" ]; then
-    echo "  compilando $proj ..."
-    ( cd "$RAIZ/$proj" && mvn -q clean compile >/dev/null 2>&1 )
-  fi
+  echo "  compilando $proj ..."
+  ( cd "$RAIZ/$proj" && mvn -q clean compile >/dev/null 2>&1 )
 }
 
 # Ejecuta una tanda de REPES corridas de un programa con N consumidores.
@@ -59,7 +62,7 @@ tanda() {
   for i in $(seq 1 "$REPES"); do
     # Captura la salida completa de la corrida
     local salida
-    salida=$(cd "$RAIZ/$proj" && java -cp target/classes "$MAIN" $n 2>/dev/null)
+    salida=$(cd "$RAIZ/$proj" && java $JVM_FLAGS -cp target/classes "$MAIN" $n 2>/dev/null)
     # Extrae el tiempo "Elapsed time: XXXms"
     local ms
     ms=$(echo "$salida" | grep -oE 'Elapsed time: [0-9]+' | grep -oE '[0-9]+')
@@ -120,8 +123,27 @@ for PROJ in $PROG_MULTI; do
   echo "" >> "$RESUMEN"
 done
 
+# --- Punto 10: palabras con mas y menos repeticiones ------------------------
+# Se hace UNA corrida adicional y se guarda la salida completa (incluye el
+# top 5 / bottom 5 que imprime Results.printTopAndBottom).
+PALABRAS="$OUT/palabras_top_bottom.txt"
+PROJ_P10="WordCountConcurrentHashMap"
+N_P10=4
+echo ""
+echo "=== Punto 10: generando top 5 / bottom 5 de palabras ($PROJ_P10, $N_P10 consumidores) ==="
+{
+  echo "============================================================"
+  echo " PUNTO 10 - Palabras con mas y menos repeticiones"
+  echo " Programa : $PROJ_P10 ($N_P10 consumidores)"
+  echo " Fecha    : $(date '+%Y-%m-%d %H:%M:%S')"
+  echo "============================================================"
+  ( cd "$RAIZ/$PROJ_P10" && java $JVM_FLAGS -cp target/classes "$MAIN" "$N_P10" 2>/dev/null )
+} > "$PALABRAS"
+echo "  -> guardado en ${PALABRAS#$RAIZ/}"
+
 echo "########################################################"
 echo "# Listo. Resultados en: $OUT"
 echo "# Resumen general       : $RESUMEN"
+echo "# Punto 10 (palabras)   : $PALABRAS"
 echo "########################################################"
 cat "$RESUMEN"
