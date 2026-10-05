@@ -1,0 +1,11 @@
+============================================================
+ Programa     : WordCountProducerConsumer
+ Consumidores : 1 (productor-consumidor fijo)
+ Archivo datos: enwiki-latest-pages-articles13.xml-p10672789p11659682
+ Repeticiones : 10
+ JVM          : -Xmx4g
+ Fecha        : 2026-10-05 12:25:32
+============================================================
+  Corrida 01: 42507 ms
+  Corrida 02: 42966 ms
+  Corrida 03: 42659 ms

@@ -32,7 +32,25 @@ class Pages implements Iterable<Page> {
 
     public PageIterator() throws Exception {
       remainingPages = maxPages;
-      reader = XMLInputFactory.newInstance().createXMLEventReader(new FileInputStream(fileName));
+      XMLInputFactory factory = XMLInputFactory.newInstance();
+      // Los dumps de Wikipedia contienen entidades/textos muy grandes que superan
+      // los limites de seguridad por defecto de JAXP en JDK modernos
+      // (p.ej. jdk.xml.maxGeneralEntitySizeLimit = 100000), lo que abortaba el
+      // parseo tras unas pocas miles de paginas. Se desactivan esos limites para
+      // poder procesar el archivo completo.
+      setProperty(factory, "jdk.xml.maxGeneralEntitySizeLimit", "0");
+      setProperty(factory, "jdk.xml.totalEntitySizeLimit", "0");
+      setProperty(factory, "jdk.xml.entityExpansionLimit", "0");
+      setProperty(factory, "jdk.xml.maxElementDepth", "0");
+      setProperty(factory, "jdk.xml.maxXMLNameLimit", "0");
+      setProperty(factory, "jdk.xml.elementAttributeLimit", "0");
+      factory.setProperty(XMLInputFactory.IS_COALESCING, Boolean.TRUE);
+      reader = factory.createXMLEventReader(new FileInputStream(fileName));
+    }
+
+    // Fija una propiedad del factory ignorando las que no esten soportadas.
+    private void setProperty(XMLInputFactory factory, String name, String value) {
+      try { factory.setProperty(name, value); } catch (Exception ignored) {}
     }
 
     public boolean hasNext() { return remainingPages > 0; }

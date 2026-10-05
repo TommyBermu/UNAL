@@ -22,7 +22,7 @@ class Parser implements Runnable {
 
   public void run() {
     try {
-      Iterable<Page> pages = new Pages(100000, fileName);
+      Iterable<Page> pages = new Pages(Integer.MAX_VALUE, fileName);
       for (Page page: pages)
         queue.put(page);
     } catch (Exception e) { e.printStackTrace(); }

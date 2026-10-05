@@ -10,6 +10,10 @@ package com.paulbutcher;
 
 import java.util.Map;
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.concurrent.ArrayBlockingQueue;
 
 public class WordCount {
@@ -31,8 +35,26 @@ public class WordCount {
     long end = System.currentTimeMillis();
     System.out.println("Elapsed time: " + (end - start) + "ms");
 
-    // for (Map.Entry<String, Integer> e: counts.entrySet()) {
-    //   System.out.println(e);
-    // }
+    printTopAndBottom(counts);
+  }
+
+  private static void printTopAndBottom(Map<String, Integer> counts) {
+    System.out.println("Productor-Consumidor: 1 productor, 1 consumidor");
+    System.out.println("Palabras distintas: " + counts.size());
+    List<Map.Entry<String, Integer>> entries =
+        new ArrayList<Map.Entry<String, Integer>>(counts.entrySet());
+    Collections.sort(entries, new Comparator<Map.Entry<String, Integer>>() {
+      public int compare(Map.Entry<String, Integer> a, Map.Entry<String, Integer> b) {
+        return b.getValue().compareTo(a.getValue());
+      }
+    });
+    System.out.println("--- 5 palabras con MAS repeticiones ---");
+    for (int i = 0; i < 5 && i < entries.size(); i++)
+      System.out.println((i + 1) + ". " + entries.get(i).getKey() + " = " + entries.get(i).getValue());
+    System.out.println("--- 5 palabras con MENOS repeticiones ---");
+    for (int i = 0; i < 5 && i < entries.size(); i++) {
+      int idx = entries.size() - 1 - i;
+      System.out.println((i + 1) + ". " + entries.get(idx).getKey() + " = " + entries.get(idx).getValue());
+    }
   }
 }

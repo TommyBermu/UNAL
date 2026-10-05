@@ -24,21 +24,46 @@ class Words implements Iterable<String> {
     private BreakIterator wordBoundary;
     private int start;
     private int end;
+    private String nextWord;
 
     public WordIterator() {
       wordBoundary = BreakIterator.getWordInstance();
       wordBoundary.setText(text);
       start = wordBoundary.first();
       end = wordBoundary.next();
+      advance();
     }
 
-    public boolean hasNext() { return end != BreakIterator.DONE; }
+    // Devuelve true solo para tokens que son palabras reales:
+    // al menos 2 caracteres y que contengan alguna letra o digito.
+    private boolean isWord(String s) {
+      if (s.length() < 2) return false;
+      for (int i = 0; i < s.length(); i++) {
+        if (Character.isLetterOrDigit(s.charAt(i))) return true;
+      }
+      return false;
+    }
+
+    // Avanza hasta el siguiente token valido (o deja nextWord en null si no hay).
+    private void advance() {
+      nextWord = null;
+      while (end != BreakIterator.DONE) {
+        String s = text.substring(start, end);
+        start = end;
+        end = wordBoundary.next();
+        if (isWord(s)) {
+          nextWord = s.toLowerCase();
+          return;
+        }
+      }
+    }
+
+    public boolean hasNext() { return nextWord != null; }
 
     public String next() {
-      String s = text.substring(start, end);
-      start = end;
-      end = wordBoundary.next();
-      return s;
+      String current = nextWord;
+      advance();
+      return current;
     }
 
     public void remove() { throw new UnsupportedOperationException(); }
