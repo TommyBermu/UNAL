@@ -131,12 +131,18 @@ public final class ReciprocalArraySum {
          * @return El valor calculado por esta tarea
          */
         public double getValue() {
-            return value;
+            return this.value;
         }
 
         @Override
         protected void compute() {
-            // Para hacer
+            double sum = 0;
+
+            for (int i = startIndexInclusive; i < endIndexExclusive; i++) {
+                sum += 1 / input[i];
+            }
+
+            this.value = sum;
         }
     }
 
@@ -154,14 +160,14 @@ public final class ReciprocalArraySum {
     protected static double parArraySum(final double[] input) {
         assert input.length % 2 == 0;
 
-        double sum = 0;
+        ReciprocalArraySumTask left = new ReciprocalArraySumTask(0, input.length / 2, input);
+        ReciprocalArraySumTask right = new ReciprocalArraySumTask(input.length / 2, input.length, input);
 
-        // Calcula la suma de los recíprocos de los elementos del arreglo
-        for (int i = 0; i < input.length; i++) {
-            sum += 1 / input[i];
-        }
+        left.fork();
+        right.compute();
+        left.join();
 
-        return sum;
+        return left.getValue() + right.getValue();
     }
 
     /**
@@ -179,9 +185,26 @@ public final class ReciprocalArraySum {
             final int numTasks) {
         double sum = 0;
 
-        // Calcula la suma de los recíprocos de los elementos del arreglo
-        for (int i = 0; i < input.length; i++) {
-            sum += 1 / input[i];
+        ReciprocalArraySumTask[] tasks = new ReciprocalArraySumTask[numTasks];
+
+        for (int i = 0; i < numTasks; i++) {
+            int start = getChunkStartInclusive(i, numTasks, input.length);
+            int end = getChunkEndExclusive(i, numTasks, input.length);
+            tasks[i] = new ReciprocalArraySumTask(start, end, input);
+        }
+
+        // Forkea todas las tareas menos la última, ejecuta la última en el
+        // hilo actual y luego espera (join) a que las demás terminen.
+        for (int i = 1; i < numTasks; i++) {
+            tasks[i].fork();
+        }
+        tasks[0].compute();
+        for (int i = 1; i < numTasks; i++) {
+            tasks[i].join();
+        }
+
+        for (int i = 0; i < numTasks; i++) {
+            sum += tasks[i].getValue();
         }
 
         return sum;

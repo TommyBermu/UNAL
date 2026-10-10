@@ -27,3 +27,7 @@ dist-ssr
 # de CompuParalela
 CompuParalela2026-2/code/
 enwiki-latest-pages-articles13.xml-p10672789p11659682
+
+# Java / Maven
+target/
+*.class
