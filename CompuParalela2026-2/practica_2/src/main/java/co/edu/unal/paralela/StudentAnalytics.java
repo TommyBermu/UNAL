@@ -49,9 +49,7 @@ public final class StudentAnalytics {
      */
     public double averageAgeOfEnrolledStudentsParallelStream(
             final Student[] studentArray) {
-        Stream<Student> studStream = Arrays.stream(studentArray);
-
-        return studStream.parallel().filter(Student::checkIsCurrent)
+        return Arrays.stream(studentArray).parallel().filter(Student::checkIsCurrent)
                 .mapToDouble(Student::getAge).average()
                 .orElse(0.0);
     }
@@ -156,9 +154,8 @@ public final class StudentAnalytics {
      */
     public int countNumberOfFailedStudentsOlderThan20ParallelStream(
             final Student[] studentArray) {
-        Stream<Student> studStream = Arrays.stream(studentArray);
 
-        return (int) studStream.parallel()
+        return (int) Arrays.stream(studentArray).parallel()
                 .filter(s -> !s.checkIsCurrent() && s.getAge() > 20 && s.getGrade() < 65).count();
     }
 }
