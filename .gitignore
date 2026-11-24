@@ -6,7 +6,7 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-
+__pycache__/
 node_modules
 dist
 dist-ssr
@@ -23,11 +23,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
 # de otras clases
-ME01-taller01-manets/
+ME01/
 CompuVisual2026-2/
-CompuParalela2026-2/awesome-compose/
-enwiki-latest-pages-articles13.xml-p10672789p11659682
 
 # Java / Maven
 target/
