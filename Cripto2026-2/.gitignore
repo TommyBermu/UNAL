@@ -1,6 +1,6 @@
 # Clave privada: NUNCA versionar
-server/keys/private.pem
-server/keys/attacker_private.pem
+server/keys/
+device/include/public_key.h
 
 # Artefactos de build de PlatformIO
 device/.pio/
