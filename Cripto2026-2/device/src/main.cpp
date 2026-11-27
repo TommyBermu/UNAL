@@ -326,15 +326,19 @@ static VerifyResult verify_package(const uint8_t *pkg, size_t pkg_len) {
 
 // ---------- red ----------
 
-static bool download(const String &url, uint8_t **buf, size_t *len) {
+// Descarga el cuerpo de la URL. Devuelve true si la peticion fue OK (200 con
+// datos). Escribe en *httpCode el codigo HTTP (p.ej. 204 = al dia, sin cuerpo).
+static bool download(const String &url, uint8_t **buf, size_t *len, int *httpCode) {
     HTTPClient http;
     if (!http.begin(url)) {
         log_line("  [!] no se pudo iniciar HTTP");
+        if (httpCode) *httpCode = -1;
         return false;
     }
     int code = http.GET();
+    if (httpCode) *httpCode = code;
     if (code != HTTP_CODE_OK) {
-        log_line("  [!] HTTP " + String(code) + " pidiendo " + url);
+        // 204 (al dia) y otros no son error fatal; el loop decide que hacer.
         http.end();
         return false;
     }
@@ -481,29 +485,37 @@ void loop() {
         (lastCheck == 0 || millis() - lastCheck > (uint32_t)CHECK_INTERVAL_S * 1000)) {
         lastCheck = millis();
 
-        String url = String(SERVER_BASE_URL) + FIRMWARE_PACKAGE;
+        // El SERVIDOR decide si hay actualizacion: le mandamos quienes somos y
+        // que version tenemos. Si installedVersion es -1 (nada instalado),
+        // enviamos 0 para que nos ofrezca la primera version disponible.
+        int myVer = installedVersion < 0 ? 0 : installedVersion;
+        String url = String(SERVER_BASE_URL) + "check?type=" + String(DEVICE_TYPE) +
+                     "&version=" + String(myVer);
         log_line("");
-        log_line("Pidiendo firmware: " + url);
+        log_line("Consultando al servidor: " + url);
 
         uint8_t *buf = nullptr;
         size_t len = 0;
-        if (download(url, &buf, &len)) {
-            log_line("Descargados " + String(len) + " bytes. Verificando...");
+        int code = 0;
+        if (download(url, &buf, &len, &code)) {
+            log_line("Servidor ofrece actualizacion (" + String(len) + " bytes). Verificando...");
             VerifyResult r = verify_package(buf, len);
             if (r == VR_UPDATED) {
                 accepted = true;   // nuevo patron activo (parse_pattern ya corrio)
                 log_line(">> Firmware APLICADO. Nuevo comportamiento (LED + buzzer) activo.");
             } else if (r == VR_UPTODATE) {
-                // Ya estaba al dia: mantiene el patron actual, no toca nada.
-                log_line(">> Sin cambios: ya tiene la ultima version.");
+                log_line(">> Sin cambios: la version ofrecida no es mas nueva.");
             } else {
-                // VR_REJECTED: fallo de seguridad. No cambia el estado actual.
-                // (Si nunca hubo firmware valido, accepted sigue false = apagado.)
-                log_line(">> Firmware DESCARTADO. El dispositivo sigue como estaba.");
+                // VR_REJECTED: fallo de seguridad. El dispositivo NO confia en el
+                // servidor; aunque este nos lo haya ofrecido, la firma mando.
+                log_line(">> Firmware DESCARTADO por verificacion. El dispositivo sigue igual.");
             }
             free(buf);
+        } else if (code == 204) {
+            log_line(">> El servidor dice que ya estamos al dia (204). Nada que hacer.");
+            if (buf) free(buf);
         } else {
-            log_line("No se pudo descargar el paquete.");
+            log_line(">> No hubo respuesta util del servidor (HTTP " + String(code) + ").");
             if (buf) free(buf);
         }
     }

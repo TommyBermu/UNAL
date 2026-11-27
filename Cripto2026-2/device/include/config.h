@@ -9,21 +9,16 @@
 
 // --- Servidor de firmware (el PC con serve.py) ---
 // Usa la IP que imprime serve.py (ej. http://192.168.1.50:8000).
-// Deja la barra final; el codigo concatena el nombre del paquete.
+// Deja la barra final; el codigo arma la URL del endpoint /check.
 #define SERVER_BASE_URL "http://192.168.12.1:8000/"
 
-// --- Que paquete pedir ---
-// En la Opcion A (actualizacion OTA realista) el ESP32 pide SIEMPRE el mismo
-// nombre "latest", y en el PC decides que version publicas copiando encima:
-//   cp firmwares/camera_v1.fwpkg firmwares/camera_latest.fwpkg   (publicar v1)
-//   cp firmwares/camera_v2.fwpkg firmwares/camera_latest.fwpkg   (actualizar a v2)
-// El ESP32 descarga en su proximo chequeo y actualiza solo si la version es mayor.
-//
-// Para los ESP32: camera -> "camera_latest.fwpkg", sensor -> "sensor_latest.fwpkg".
-// Para probar rechazos, apunta a un paquete concreto:
-//   camera_v1_tampered.fwpkg (integridad), camera_v1_fakekey.fwpkg (autenticidad),
-//   camera_v1.fwpkg en un sensor (compatibilidad).
-#define FIRMWARE_PACKAGE "camera_latest.fwpkg"
+// El dispositivo NO pide un archivo por nombre. Consulta al servidor con su
+// tipo (DEVICE_TYPE, fijado por el entorno camera/sensor) y su version actual:
+//   GET /check?type=camera&version=1
+// El SERVIDOR decide si hay algo mas nuevo y lo envia; si no, responde 204.
+// Que version esta publicada se controla en el PC con publish.py.
+// El ESP32 SIEMPRE verifica firma+hash+tipo de lo que reciba (no confia en el
+// servidor). Ver README para el guion de la demo.
 
-// Segundos entre intentos de actualizacion.
+// Segundos entre consultas de actualizacion.
 #define CHECK_INTERVAL_S 15

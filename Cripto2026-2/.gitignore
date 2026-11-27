@@ -6,6 +6,7 @@ device/include/public_key.h
 device/.pio/
 .pio/
 
-# Firmwares generados (se regeneran con make_demo.py)
+# Firmwares generados (se regeneran con build_firmwares.py)
 server/firmwares/*.bin
 server/firmwares/*.fwpkg
+server/firmwares/*.force

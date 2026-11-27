@@ -39,12 +39,22 @@ def main() -> None:
         nota = "-> el ESP32 lo ACEPTARA si la version es mayor que la instalada"
 
     dst = FW_DIR / f"{device}_latest.fwpkg"
+    force_flag = FW_DIR / f"{device}_latest.force"
     if not src.exists():
         raise SystemExit(
             f"No existe {src.name}. Corre antes: python3 build_firmwares.py\n"
-            f"(recuerda: tampered/fakekey solo existen para 'camera')")
+            f"(para tampered/fakekey:  python3 build_firmwares.py --with-attacks)")
 
     shutil.copy(src, dst)
+
+    # Flag "force": para los ataques, el servidor debe ofrecerlos sin importar la
+    # version (simula a un atacante). Para firmwares normales, se quita el flag
+    # y el servidor vuelve a respetar la regla de "solo version mayor".
+    if what in ("tampered", "fakekey"):
+        force_flag.write_text("force\n")
+    elif force_flag.exists():
+        force_flag.unlink()
+
     print(f"Publicado: {dst.name} = {src.name}")
     print(f"El ESP32 '{device}' lo tomara en su proximo chequeo (unos segundos). {nota}")
 
