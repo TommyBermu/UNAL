@@ -1,0 +1,11 @@
+# Clave privada: NUNCA versionar
+server/keys/private.pem
+server/keys/attacker_private.pem
+
+# Artefactos de build de PlatformIO
+device/.pio/
+.pio/
+
+# Firmwares generados (se regeneran con make_demo.py)
+server/firmwares/*.bin
+server/firmwares/*.fwpkg
